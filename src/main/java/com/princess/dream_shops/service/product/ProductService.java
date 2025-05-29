@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.princess.dream_shops.exceptions.ProductNotFoundException;
 import com.princess.dream_shops.model.Product;
 import com.princess.dream_shops.repository.ProductRepository;
 
@@ -22,31 +23,39 @@ public class ProductService implements iProductService {
 
     @Override
     public Product getProductById(Long id){
-        return null;
+        return productRepository.findById(id)
+        .orElseThrow(() -> new ProductNotFoundException("Product not found!"));
     }
 
     @Override
-    public void deleteProductBtId(Long id){
+    public void deleteProductById(Long id){
+         productRepository.findById(id)
+         .ifPresentOrElse(productRepository::delete, 
+         () -> {throw new ProductNotFoundException("Product not found");}); 
+    }
+
+    @Override
+    public void updateProduct(Product product, Long productId) {
     }
 
     @Override
     public List<Product> getAllProducts(){
-        return List.of();
+        return productRepository.findAll();
     }
 
     @Override
-    public List<Product> getProductsByCategory(String category){
-        return List.of();
+    public List<Product> getProductsByCategoryName(String category){
+        return productRepository.findByCategoryName(category);
     }
 
     @Override
     public List<Product> getProductsByBrand(String brand){
-        return List.of();
+        return productRepository.findByBrand(brand);
     }
 
     @Override
-    public List<Product> getProductsByCategoryAndBrand(String category, String brand){
-        return List.of();
+    public List<Product> getProductsByCategoryNameAndBrand(String category, String brand){
+        return productRepository.findByCategoryNameAndBrand(category, brand);
     }
 
     @Override
@@ -62,10 +71,6 @@ public class ProductService implements iProductService {
     @Override
     public Long countProductByBrandAndName(String brand, String name){
         return null;
-    }
-
-    @Override
-    public void updateProduct(Product product, Long productId) {
     }
 
 }
