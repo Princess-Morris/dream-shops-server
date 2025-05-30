@@ -11,7 +11,7 @@ import com.princess.dream_shops.model.Product;
 import com.princess.dream_shops.repository.CategoryRepository;
 import com.princess.dream_shops.repository.ProductRepository;
 import com.princess.dream_shops.request.AddProductRequest;
-
+import com.princess.dream_shops.request.ProductUpdateRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductService implements iProductService {
 
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public Product addProduct(AddProductRequest request){
@@ -28,13 +29,13 @@ public class ProductService implements iProductService {
         // if no, save it as a new category
         // then set it as the new product category
 
-        Category category = Optional.ofNullable(CategoryRepository.findByName(request.getCategory().getName()))
-                         .orElseGet(() -> {
-                             Category newCategory = new Category(request.getCategory().getName());
-                             return CategoryRepository.save(newCategory);
-                         });
-                 request.setCategory(category);  
-                 return productRepository.save(createProduct(request, category));
+       Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
+       .orElseGet(() -> {
+        Category newCategory = new Category(request.getCategory().getName());
+        return categoryRepository.save(newCategory);
+       });
+       request.setCategory(category);
+       return productRepository.save(createProduct(request, category));
     }
 
     private Product createProduct(AddProductRequest request, Category category){
@@ -63,6 +64,18 @@ public class ProductService implements iProductService {
 
     @Override
     public void updateProduct(Product product, Long productId) {
+    }
+
+    private Product updateExistingProduct(Product existingProduct, ProductUpdateRequest request){
+        existingProduct.setName(request.getName());
+        existingProduct.setBrand(request.getBrand());
+        existingProduct.setPrice(request.getPrice());
+        existingProduct.setInventory((request.getInventory()));
+        existingProduct.setDescription(request.getDescription());
+
+        Category category = categoryRepository.findByName(request.getCategory().getName());
+        existingProduct.setCategory(category);
+        return existingProduct;
     }
 
     @Override
