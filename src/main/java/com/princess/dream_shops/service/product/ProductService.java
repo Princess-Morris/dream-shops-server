@@ -1,12 +1,17 @@
 package com.princess.dream_shops.service.product;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.princess.dream_shops.exceptions.ProductNotFoundException;
+import com.princess.dream_shops.model.Category;
 import com.princess.dream_shops.model.Product;
+import com.princess.dream_shops.repository.CategoryRepository;
 import com.princess.dream_shops.repository.ProductRepository;
+import com.princess.dream_shops.request.AddProductRequest;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,11 +19,33 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProductService implements iProductService {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     @Override
-    public Product addProduct(Product product){
-        return null;
+    public Product addProduct(AddProductRequest request){
+        // check if the category is found in the DB
+        // if Yes, set it as the new product category
+        // if no, save it as a new category
+        // then set it as the new product category
+
+        Category category = Optional.ofNullable(CategoryRepository.findByName(request.getCategory().getName()))
+                         .orElseGet(() -> {
+                             Category newCategory = new Category(request.getCategory().getName());
+                             return CategoryRepository.save(newCategory);
+                         });
+                 request.setCategory(category);  
+                 return productRepository.save(createProduct(request, category));
+    }
+
+    private Product createProduct(AddProductRequest request, Category category){
+        return new Product(
+            request.getName(),
+            request.getBrand(),
+            request.getPrice(),
+            request.getInventory(),
+            request.getDescription(),
+            category
+        );
     }
 
     @Override
@@ -60,17 +87,17 @@ public class ProductService implements iProductService {
 
     @Override
     public List<Product> getProductsByName(String name){
-          return List.of();
+          return productRepository.findByName(name);
     }
 
     @Override
-    public List<Product> getProductsByBrandAndName(String category, String name){
-        return List.of();
+    public List<Product> getProductsByBrandAndName(String brand, String name){
+        return productRepository.findByBrandAndName(brand, name);
     }
 
     @Override
     public Long countProductByBrandAndName(String brand, String name){
-        return null;
+        return productRepository.countByBrandAndName(brand, name);
     }
 
 }
