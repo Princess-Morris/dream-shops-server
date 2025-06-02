@@ -1,10 +1,9 @@
 package com.princess.dream_shops.controller;
 
-import java.net.http.HttpHeaders;
 import java.util.List;
 
-import org.springframework.boot.autoconfigure.web.ServerProperties.Tomcat.Resource;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +18,10 @@ import com.princess.dream_shops.model.Image;
 import com.princess.dream_shops.response.ApiResponse;
 import com.princess.dream_shops.service.image.IImageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.bind.annotation.GetMapping;
+
+
 
 @RequiredArgsConstructor
 @RestController
@@ -36,12 +39,24 @@ public class ImageController {
          }
     }
 
+    @GetMapping("/image/download/{imageId}")
+    public String getMethodName(@RequestParam String param) {
+        return new String();
+    }
+    
     public ResponseEntity<Resource> downloadImage(@RequestParam Long productId, @RequestParam Long imageId){
-        Image image = imageService.getImageById(imageId);
-        ByteArrayResource resource = new ByteArrayResource(image.getImage().getBytes(1, (int) image.getImage().length()));
-        return ResponseEntity.ok().contentType(MediaType.parseMediaType(image.getFileType()))
-        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +image.getFileName() + "\"")
-        .body(resource);
+        // added the try-catch block to remove error
+        try{
+            Image image = imageService.getImageById(imageId);
+            ByteArrayResource resource = new ByteArrayResource(image.getImage().getBytes(1, (int) image.getImage().length()));
+            return ResponseEntity.ok().contentType(MediaType.parseMediaType(image.getFileType()))
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +image.getFileName() + "\"")
+            .body(resource);
+        } catch(Exception e){
+              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .body(null);
+        }
+        
     }
 
 
