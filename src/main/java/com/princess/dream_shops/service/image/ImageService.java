@@ -76,7 +76,7 @@ public class ImageService implements IImageService {
     }
 
     @Override
-    public void updateImage(MultipartFile file, Long imageId, Long productId){
+    public void updateImage(MultipartFile file, Long imageId){
         Image image = getImageById(imageId);
         try {
             image.setFileName(file.getOriginalFilename());

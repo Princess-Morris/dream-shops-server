@@ -8,18 +8,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.princess.dream_shops.dto.ImageDto;
+import com.princess.dream_shops.exceptions.ResourceNotFoundException;
 import com.princess.dream_shops.model.Image;
 import com.princess.dream_shops.response.ApiResponse;
 import com.princess.dream_shops.service.image.IImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import org.springframework.web.bind.annotation.PutMapping;
+
+
 
 
 
@@ -53,6 +60,27 @@ public class ImageController {
               return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
               .body(null);
         }
+        
+    }
+
+    @PutMapping("image/{imageId}/update")
+    public String putMethodName(@PathVariable String id, @RequestBody String entity) {
+        //TODO: process PUT request
+        
+        return entity;
+    }
+    public ResponseEntity<ApiResponse> updateImage(@PathVariable Long imageId, @RequestBody MultipartFile file){
+        try{
+            Image image = imageService.getImageById(imageId);
+            if(image != null) {
+                imageService.updateImage(file, imageId);
+                return ResponseEntity.ok(new ApiResponse("update success!", null));
+            }
+        } catch (ResourceNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        }
+
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("update failed", INTERNAL_SERVER_ERROR));
         
     }
 
