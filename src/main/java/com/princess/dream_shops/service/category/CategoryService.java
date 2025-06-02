@@ -2,23 +2,33 @@ package com.princess.dream_shops.service.category;
 
 import java.util.List;
 
-import com.princess.dream_shops.model.Category;
+import org.springframework.stereotype.Service;
 
+import com.princess.dream_shops.exceptions.ResourceNotFoundException;
+import com.princess.dream_shops.model.Category;
+import com.princess.dream_shops.repository.CategoryRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
 public class CategoryService implements iCategoryService {
+    private final CategoryRepository categoryRepository;
 
     @Override
    public Category getCategoryById(Long id){
-        return null;
+        return categoryRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
     }
 
     @Override
     public Category getCategoryByName(String name){
-        return null;
+        return categoryRepository.findByName(name);
     }
 
     @Override
     public List<Category>getAllCategories(){
-        return List.of();
+        return categoryRepository.findAll();
     }
 
     public Category addCategory(Category category){
@@ -30,5 +40,8 @@ public class CategoryService implements iCategoryService {
     }
 
     public void deleteCategoryById(Long id){
+       categoryRepository.findById(id).ifPresentOrElse(categoryRepository::delete, () -> {
+        throw new ResourceNotFoundException(("Category not found!"));
+       });
     }
 }
