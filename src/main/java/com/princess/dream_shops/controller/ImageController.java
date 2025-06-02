@@ -21,6 +21,7 @@ import com.princess.dream_shops.response.ApiResponse;
 import com.princess.dream_shops.service.image.IImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -64,11 +65,6 @@ public class ImageController {
     }
 
     @PutMapping("image/{imageId}/update")
-    public String putMethodName(@PathVariable String id, @RequestBody String entity) {
-        //TODO: process PUT request
-        
-        return entity;
-    }
     public ResponseEntity<ApiResponse> updateImage(@PathVariable Long imageId, @RequestBody MultipartFile file){
         try{
             Image image = imageService.getImageById(imageId);
@@ -84,5 +80,19 @@ public class ImageController {
         
     }
 
+    @DeleteMapping("/image/{imageId}/delete")
+    public ResponseEntity<ApiResponse> deleteImage(@PathVariable Long imageId){
+        try{
+            Image image = imageService.getImageById(imageId);
+            if(image != null) {
+                imageService.deleteImageById( imageId);
+                return ResponseEntity.ok(new ApiResponse("Delete success!", null));
+            }
+        } catch (ResourceNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        }
 
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("delete failed", INTERNAL_SERVER_ERROR));
+        
+    }
 }
