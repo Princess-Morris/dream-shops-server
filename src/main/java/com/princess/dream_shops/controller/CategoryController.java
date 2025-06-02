@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 
@@ -85,6 +87,16 @@ public class CategoryController {
            return ResponseEntity.ok(new ApiResponse("Deleted", null));
         } catch (ResourceNotFoundException e){
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        }
+     }
+
+     @PutMapping("category/{id}/update")
+     public ResponseEntity<ApiResponse> updateCategory(@PathVariable Long id, @RequestBody Category category){
+        try{
+            Category updatedCategory = categoryService.updateCategory(category, id);
+             return ResponseEntity.ok(new ApiResponse("Update success!", updatedCategory));
+        } catch (ResourceNotFoundException e){
+              return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
      }
 }
