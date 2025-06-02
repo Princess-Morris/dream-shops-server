@@ -39,11 +39,8 @@ public class ImageController {
          }
     }
 
-    @GetMapping("/image/download/{imageId}")
-    public String getMethodName(@RequestParam String param) {
-        return new String();
-    }
     
+    @GetMapping("/image/download/{imageId}")
     public ResponseEntity<Resource> downloadImage(@RequestParam Long productId, @RequestParam Long imageId){
         // added the try-catch block to remove error
         try{
