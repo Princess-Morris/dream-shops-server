@@ -10,7 +10,7 @@ import javax.sql.rowset.serial.SerialBlob;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.princess.dream_shops.ImageDto;
+import com.princess.dream_shops.dto.ImageDto;
 import com.princess.dream_shops.exceptions.ResourceNotFoundException;
 import com.princess.dream_shops.model.Image;
 import com.princess.dream_shops.model.Product;

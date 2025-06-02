@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.princess.dream_shops.ImageDto;
+import com.princess.dream_shops.dto.ImageDto;
 import com.princess.dream_shops.model.Image;
 
 public interface IImageService {
