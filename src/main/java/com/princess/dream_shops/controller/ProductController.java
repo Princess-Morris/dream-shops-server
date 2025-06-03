@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.princess.dream_shops.exceptions.ResourceNotFoundException;
 import com.princess.dream_shops.model.Product;
 import com.princess.dream_shops.request.AddProductRequest;
+import com.princess.dream_shops.request.ProductUpdateRequest;
 import com.princess.dream_shops.response.ApiResponse;
 import com.princess.dream_shops.service.product.iProductService;
 
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -53,5 +55,16 @@ public class ProductController {
     } catch(Exception e){
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
     }
+   }
+
+   @PutMapping("/product/{productId}/update")
+   public ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductUpdateRequest request, @PathVariable Long productId){
+    try{
+        Product theProduct = productService.updateProduct(request, productId);
+        return ResponseEntity.ok(new ApiResponse("update product success", theProduct));
+    } catch( ResourceNotFoundException e){
+       return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+    }
+   
    }
 }
