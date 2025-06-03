@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.princess.dream_shops.exceptions.ProductNotFoundException;
+import com.princess.dream_shops.exceptions.ResourceNotFoundException;
 import com.princess.dream_shops.model.Category;
 import com.princess.dream_shops.model.Product;
 import com.princess.dream_shops.repository.CategoryRepository;
@@ -52,14 +53,14 @@ public class ProductService implements iProductService {
     @Override
     public Product getProductById(Long id){
         return productRepository.findById(id)
-        .orElseThrow(() -> new ProductNotFoundException("Product not found!"));
+        .orElseThrow(() -> new ResourceNotFoundException("Product not found!"));
     }
 
     @Override
     public void deleteProductById(Long id){
          productRepository.findById(id)
          .ifPresentOrElse(productRepository::delete, 
-         () -> {throw new ProductNotFoundException("Product not found");}); 
+         () -> {throw new ResourceNotFoundException("Product not found");}); 
     }
 
     @Override
@@ -67,7 +68,7 @@ public class ProductService implements iProductService {
        return productRepository.findById(productId)
                .map(existingProduct -> updateExistingProduct(existingProduct, product))
                .map(productRepository :: save)
-               .orElseThrow(() -> new ProductNotFoundException("Product not found!"));
+               .orElseThrow(() -> new ResourceNotFoundException("Product not found!"));
     }
 
     private Product updateExistingProduct(Product existingProduct, ProductUpdateRequest request){
