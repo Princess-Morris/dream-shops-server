@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.catalina.connector.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.princess.dream_shops.exceptions.ResourceNotFoundException;
@@ -82,8 +83,8 @@ public class ProductController {
     
    }
 
-   @GetMapping("/by/{brand-and-name}")
-   public ResponseEntity<ApiResponse> getProductByBrandAndName(@PathVariable String brandName, @PathVariable String productName){
+   @GetMapping("/products/by/brand-and-name")
+   public ResponseEntity<ApiResponse> getProductByBrandAndName(@RequestParam String brandName, @RequestParam String productName){
     try{
         List<Product> products = productService.getProductsByBrandAndName(brandName, productName);
         if (products.isEmpty()){
@@ -92,6 +93,19 @@ public class ProductController {
         return ResponseEntity.ok(new ApiResponse("success!", products));
     } catch (Exception e){
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
+    }
+    }
+
+    @GetMapping("/products/by/category-and-brand")
+   public ResponseEntity<ApiResponse> getProductByCategoryAndBrand(@RequestParam String category, @RequestParam String brand){
+    try{
+        List<Product> products = productService.getProductsByCategoryNameAndBrand(category, brand);
+        if (products.isEmpty()){
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("No products found", null));
+        }
+        return ResponseEntity.ok(new ApiResponse("success!", products));
+    } catch (Exception e){
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("error", e.getMessage()));
     }
     }
     
