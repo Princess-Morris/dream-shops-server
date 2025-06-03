@@ -44,7 +44,7 @@ public class ProductController {
    public ResponseEntity<ApiResponse> getProductById(@PathVariable Long productId){
     try{
         Product product = productService.getProductById(productId);
-        return ResponseEntity.ok(new ApiResponse("succes", product));
+        return ResponseEntity.ok(new ApiResponse("success", product));
    
     } catch (ResourceNotFoundException e ){
          return ResponseEntity.status(NOT_FOUND).body(new ApiResponse((e.getMessage()), null));
@@ -122,10 +122,10 @@ public class ProductController {
     }
     }
 
-    @GetMapping("/products/{brand}/products")
-   public ResponseEntity<ApiResponse> findProductByBrand(@PathVariable String brand){
+    @GetMapping("/product/by-brand")
+   public ResponseEntity<ApiResponse> findProductByBrand(@RequestParam String brand){
     try{
-        List<Product> products = productService.getProductsByName(brand);
+        List<Product> products = productService.getProductsByBrand(brand);
         if (products.isEmpty()){
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("No products found", null));
         }
