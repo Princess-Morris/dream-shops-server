@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.princess.dream_shops.exceptions.ResourceNotFoundException;
 import com.princess.dream_shops.model.Cart;
+import com.princess.dream_shops.repository.CartItemRepository;
 import com.princess.dream_shops.repository.CartRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class CartService implements ICartService {
 
     private final CartRepository cartRepository;
-    private final CartItemRepository CartItemRepository;
+    private final CartItemRepository cartItemRepository;
 
     @Override
     public Cart getCart(Long id){
@@ -28,6 +29,10 @@ public class CartService implements ICartService {
 
     @Override
     public void clearCart(Long id){
+        Cart cart = getCart(id);
+        cartItemRepository.deleteAllByCartId(id);
+        cart.getItems().clear();
+        cartRepository.deleteById(id);
 
     }
 
