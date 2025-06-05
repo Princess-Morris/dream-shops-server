@@ -46,9 +46,9 @@ public class ProductController {
    public ResponseEntity<ApiResponse> getProductById(@PathVariable Long productId){
     try{
         Product product = productService.getProductById(productId);
-        var productDto = productService.convertToDto(product);
+        ProductDto productDto = productService.convertToDto(product);
 
-        return ResponseEntity.ok(new ApiResponse("success", product));
+        return ResponseEntity.ok(new ApiResponse("success", productDto));
    
     } catch (ResourceNotFoundException e ){
          return ResponseEntity.status(NOT_FOUND).body(new ApiResponse((e.getMessage()), null));
