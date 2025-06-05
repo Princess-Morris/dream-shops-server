@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.princess.dream_shops.dto.ProductDto;
 import com.princess.dream_shops.exceptions.ResourceNotFoundException;
 import com.princess.dream_shops.model.Product;
 import com.princess.dream_shops.request.AddProductRequest;
@@ -37,7 +38,8 @@ public class ProductController {
    @GetMapping("/all")
    public ResponseEntity<ApiResponse> getAllProducts(){
         List<Product> products = productService.getAllProducts();
-        return ResponseEntity.ok(new ApiResponse("success", products));
+        List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+        return ResponseEntity.ok(new ApiResponse("success", convertedProducts));
    }
 
    @GetMapping("/product/{productId}/product")
