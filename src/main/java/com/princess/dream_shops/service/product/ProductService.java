@@ -3,13 +3,18 @@ package com.princess.dream_shops.service.product;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.princess.dream_shops.dto.ImageDto;
+import com.princess.dream_shops.dto.ProductDto;
 import com.princess.dream_shops.exceptions.ProductNotFoundException;
 import com.princess.dream_shops.exceptions.ResourceNotFoundException;
 import com.princess.dream_shops.model.Category;
+import com.princess.dream_shops.model.Image;
 import com.princess.dream_shops.model.Product;
 import com.princess.dream_shops.repository.CategoryRepository;
+import com.princess.dream_shops.repository.ImageRepository;
 import com.princess.dream_shops.repository.ProductRepository;
 import com.princess.dream_shops.request.AddProductRequest;
 import com.princess.dream_shops.request.ProductUpdateRequest;
@@ -22,6 +27,8 @@ public class ProductService implements iProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ModelMapper modelMapper;
+    private final ImageRepository imageRepository;
 
     @Override
     public Product addProduct(AddProductRequest request){
@@ -116,6 +123,16 @@ public class ProductService implements iProductService {
     @Override
     public Long countProductByBrandAndName(String brand, String name){
         return productRepository.countByBrandAndName(brand, name);
+    }
+
+    public ProductDto convertToDto(Product product){
+        ProductDto productDto = modelMapper.map(product, ProductDto.class);
+        List<Image> images = imageRepository.findByProductId(product.getId());
+        List<ImageDto> imagesDtos = images.stream()
+            .map(image -> modelMapper.map(image, ImageDto.class))
+            .toList();
+        productDto.setImages(imagesDtos);
+        return productDto;
     }
 
 }

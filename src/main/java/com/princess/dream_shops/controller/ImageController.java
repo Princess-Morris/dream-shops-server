@@ -49,7 +49,7 @@ public class ImageController {
 
     
     @GetMapping("/image/download/{imageId}")
-    public ResponseEntity<Resource> downloadImage(@RequestParam Long productId, @RequestParam Long imageId){
+    public ResponseEntity<Resource> downloadImage(@RequestParam(required = false) Long productId, @PathVariable Long imageId){
         // added the try-catch block to remove error
         try{
             Image image = imageService.getImageById(imageId);
