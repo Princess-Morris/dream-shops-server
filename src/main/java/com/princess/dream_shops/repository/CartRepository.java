@@ -6,4 +6,5 @@ import com.princess.dream_shops.model.Cart;
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
+
 }
