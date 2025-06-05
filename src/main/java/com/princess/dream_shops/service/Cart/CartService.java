@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.princess.dream_shops.exceptions.ResourceNotFoundException;
 import com.princess.dream_shops.model.Cart;
+import com.princess.dream_shops.model.CartItem;
 import com.princess.dream_shops.repository.CartItemRepository;
 import com.princess.dream_shops.repository.CartRepository;
 
@@ -38,6 +39,10 @@ public class CartService implements ICartService {
 
     @Override
     public BigDecimal getTotalPrice(Long id){
-         return null;
+        Cart cart = getCart(id);
+         return cart.getItems()
+         .stream()
+         .map(CartItem :: getTotalPrice)
+         .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
