@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.springframework.stereotype.Service;
 
+import com.princess.dream_shops.exceptions.ResourceNotFoundException;
 import com.princess.dream_shops.model.Cart;
 import com.princess.dream_shops.repository.CartRepository;
 
@@ -17,7 +18,9 @@ public class CartService implements ICartService {
 
     @Override
     public Cart getCart(Long id){
-        return null;
+        Cart cart = cartRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
+        return cart;
     }
 
     @Override
