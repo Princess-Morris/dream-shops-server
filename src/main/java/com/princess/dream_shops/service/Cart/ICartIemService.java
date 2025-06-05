@@ -1,5 +1,6 @@
 package com.princess.dream_shops.service.Cart;
 
-public interface ICartIemService {
+import com.princess.dream_shops.model.Cart;
 
+public interface ICartIemService {
 }

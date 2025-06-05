@@ -1,5 +1,11 @@
 package com.princess.dream_shops.service.Cart;
 
-public interface ICartService {
+import java.math.BigDecimal;
 
+import com.princess.dream_shops.model.Cart;
+
+public interface ICartService {
+    Cart getCart(Long id);
+    void clearCart(Long id);
+    BigDecimal geTotalPrice(Long id);
 }
