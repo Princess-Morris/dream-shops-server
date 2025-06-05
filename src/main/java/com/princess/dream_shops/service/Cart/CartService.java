@@ -2,9 +2,18 @@ package com.princess.dream_shops.service.Cart;
 
 import java.math.BigDecimal;
 
-import com.princess.dream_shops.model.Cart;
+import org.springframework.stereotype.Service;
 
+import com.princess.dream_shops.model.Cart;
+import com.princess.dream_shops.repository.CartRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
 public class CartService implements ICartService {
+
+    private final CartRepository cartRepository;
 
     @Override
     public Cart getCart(Long id){
