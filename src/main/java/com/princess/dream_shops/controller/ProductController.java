@@ -119,10 +119,11 @@ public class ProductController {
    public ResponseEntity<ApiResponse> getProductByName(@PathVariable String name){
     try{
         List<Product> products = productService.getProductsByName(name);
+        List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
         if (products.isEmpty()){
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("No products found", null));
         }
-        return ResponseEntity.ok(new ApiResponse("success!", products));
+        return ResponseEntity.ok(new ApiResponse("success!", convertedProducts));
     } catch (Exception e){
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
     }
