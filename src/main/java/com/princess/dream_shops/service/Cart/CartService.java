@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class CartService implements ICartService {
 
     private final CartRepository cartRepository;
+    private final CartItemRepository CartItemRepository;
 
     @Override
     public Cart getCart(Long id){
