@@ -2,6 +2,8 @@ package com.princess.dream_shops.controller;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
+import java.math.BigDecimal;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +46,12 @@ public class CartController {
     public ResponseEntity<ApiResponse> clearCart(@PathVariable Long cartId){
           cartService.clearCart(cartId);
           return ResponseEntity.ok(new ApiResponse("Clear Cart Success!", null))
+    }
+
+    @GetMapping("/{cartId}/clear")
+    public ResponseEntity<ApiResponse> getTotalAmount(@PathVariable Long cartId){
+        BigDecimal totalPrice = cartService.getTotalPrice(cartId);
+        return ResponseEntity.ok(new ApiResponse("Total Price", totalPrice));
     }
 
 }
