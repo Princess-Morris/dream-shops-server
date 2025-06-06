@@ -13,6 +13,8 @@ import com.princess.dream_shops.response.ApiResponse;
 import com.princess.dream_shops.service.Cart.ICartService;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -36,6 +38,12 @@ public class CartController {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
 
+    }
+
+    @DeleteMapping("/{cartId}/clear")
+    public ResponseEntity<ApiResponse> clearCart(@PathVariable Long cartId){
+          cartService.clearCart(cartId);
+          return ResponseEntity.ok(new ApiResponse("Clear Cart Success!", null))
     }
 
 }
