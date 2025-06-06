@@ -44,8 +44,13 @@ public class CartController {
 
     @DeleteMapping("/{cartId}/clear")
     public ResponseEntity<ApiResponse> clearCart(@PathVariable Long cartId){
-          cartService.clearCart(cartId);
-          return ResponseEntity.ok(new ApiResponse("Clear Cart Success!", null));
+        try{
+            cartService.clearCart(cartId);
+            return ResponseEntity.ok(new ApiResponse("Clear Cart Success!", null));
+        } catch (ResourceNotFoundException e){
+             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        }
+          
     }
 
     @GetMapping("/{cartId}/clear")
