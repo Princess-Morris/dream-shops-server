@@ -2,6 +2,7 @@ package com.princess.dream_shops.service.Cart;
 
 import org.springframework.stereotype.Service;
 
+import com.princess.dream_shops.exceptions.ResourceNotFoundException;
 import com.princess.dream_shops.model.Cart;
 import com.princess.dream_shops.model.CartItem;
 import com.princess.dream_shops.model.Product;
@@ -53,7 +54,13 @@ public class CartItemService implements ICartIemService {
 
     @Override
     public void removeItemFromCart(Long cartId, Long productId){
-
+        Cart cart = cartService.getCart(cartId);
+        CartItem itemToRemove = cart.getItems()
+                    .stream()
+                    .filter(item -> item.getProduct().getId().equals(productId))
+                    .findFirst().orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        cart.removeItem(itemToRemove);            
+        cartRepository.save(cart);
     }
 
     @Override
