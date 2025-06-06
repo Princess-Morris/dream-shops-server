@@ -12,6 +12,9 @@ import com.princess.dream_shops.response.ApiResponse;
 import com.princess.dream_shops.service.Cart.ICartIemService;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -33,5 +36,16 @@ public class CartItemController {
         return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
       }
                                                       
+ }
+
+ @DeleteMapping("/{cartId}/{itemId}/remove")
+ public ResponseEntity<ApiResponse> removeItemFromCart(@PathVariable Long cartId, @PathVariable Long itemId){
+    try{
+         cartIemService.removeItemFromCart(cartId, itemId);
+         return ResponseEntity.ok(new ApiResponse("Renove Item Success", null));
+    } catch(ResourceNotFoundException e){
+        return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(
+            (e.getMessage()), null));
+    }
  }
 }
