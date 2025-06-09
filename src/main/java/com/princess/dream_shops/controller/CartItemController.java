@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RequiredArgsConstructor
@@ -47,5 +49,19 @@ public class CartItemController {
         return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(
             (e.getMessage()), null));
     }
+ }
+
+ @PutMapping("cart/{cartId}/item/{itemId}/update")
+ public ResponseEntity<ApiResponse> updateItemQuantity(@PathVariable Long cartId, 
+                                                       @PathVariable Long itemId,
+                                                        @RequestParam Integer quantity){
+
+     try{
+          cartIemService.updateItemQuantity(cartId, itemId, quantity);
+          return ResponseEntity.ok(new ApiResponse("Update Item Success", null));
+     } catch(ResourceNotFoundException e){
+        return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+
+     }
  }
 }
